@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進入問卷</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        #switchLink {
+            font-size: 20px;
+            color: blue;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #switchLink:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>點擊下方連結 進入問卷</h1>
+    <a href="#" id="switchLink" onclick="switchLink(); return false;">點我進入問卷</a>
+
+    <script>
+        // 設定網站 A 和 B 的 URL
+        const siteA = "https://lsurvey.nccu.edu.tw/limesurvey/index.php/336131?lang=zh-Hant-TW"; // 請替換為你自己的網站 A
+        const siteB = "https://lsurvey.nccu.edu.tw/limesurvey/index.php/849382?lang=zh-Hant-TW"; // 請替換為你自己的網站 B
+
+        // 從 localStorage 中讀取點擊次數與最後點擊時間
+        let clickCount = localStorage.getItem("clickCount") ? parseInt(localStorage.getItem("clickCount")) : 0;
+        let lastClickTime = localStorage.getItem("lastClickTime") ? parseInt(localStorage.getItem("lastClickTime")) : 0;
+
+        // 設定防止快速點擊的間隔 (單位為毫秒)
+        const clickInterval = 500; // 500 毫秒內的點擊視為無效
+
+        // 切換連結函數
+        function switchLink() {
+            // 當前時間
+            const currentTime = new Date().getTime();
+
+            // 檢查點擊間隔是否小於500毫秒
+            if (currentTime - lastClickTime < clickInterval) {
+                console.log("點擊過快，忽略此點擊");
+                return; // 忽略此點擊
+            }
+
+            // 更新最後點擊時間
+            lastClickTime = currentTime;
+
+            // 增加點擊次數
+            clickCount++;
+
+            // 根據點擊次數選擇網站
+            if (clickCount % 2 === 1) {
+                window.location.href = siteA; // 點擊次數是奇數時連到網站 A
+            } else {
+                window.location.href = siteB; // 點擊次數是偶數時連到網站 B
+            }
+
+            // 儲存當前的點擊次數和最後點擊時間到 localStorage
+            localStorage.setItem("clickCount", clickCount);
+            localStorage.setItem("lastClickTime", lastClickTime);
+        }
+    </script>
+</body>
+</html>
